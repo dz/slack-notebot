@@ -1,4 +1,10 @@
-node_modules
-.DS_Store
-build
-dist
+.env
+*.pyc
+*#
+*~
+*.swp
+#*
+local_settings.py
+/build
+/dist
+/*.egg-info
