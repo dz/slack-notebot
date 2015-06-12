@@ -10,11 +10,26 @@ NoteStore = {}
 def start_taking(userid):
     NoteStore[userid] = []
 
-def stop_taking(userid, client):
+def stop_taking(userid, message):
+
+    def send_dm(uid, text):
+        message._client.send_message(uid, text)
+
+    message.reply("*Finished. Collating and distributing.*")
+    client = message._client
     notes = NoteStore.pop(userid, [])
     users = client.users
     user_ids = list(chain.from_iterable([get_user_ids(note) for note in notes]))
-    return "\n".join(replace_user_ids(note, users) for note in notes)
+    user_names = [users[uid].get('name', '???') for uid in user_ids if uid in users]
+    sender_name = users[uid].get('name', '???')
+    collated = "\n".join(replace_user_ids(note, users) for note in notes)
+    meeting_notes = "```%s```" % collated
+    message.reply(meeting_notes)
+    message.reply("Sending above to %s" % ", ".join("@%s" % name for name in user_names))
+    for uid in user_ids:
+        send_dm(uid, "@%s took some notes and is sharing it with you:" % sender_name)
+        send_dm(uid, meeting_notes)
+    message.reply("Thank you for using Notebot")
 
 def add_note(userid, note):
     NoteStore[userid].append(note)
@@ -53,8 +68,7 @@ def finish_notes(message):
     userid = get_user(message)
     text = get_text(message)
     if user_is_taking_notes(userid):
-        notes = stop_taking(userid, message._client)
-        message.reply("```%s```" % notes)
+        stop_taking(userid, message)
     else:
         message.reply('Error. Type `start` to start taking notes')
 
