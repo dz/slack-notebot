@@ -14,7 +14,6 @@ def stop_taking(userid, client):
     notes = NoteStore.pop(userid, [])
     users = client.users
     user_ids = list(chain.from_iterable([get_user_ids(note) for note in notes]))
-    import pdb; pdb.set_trace()
     return "\n".join(replace_user_ids(note, users) for note in notes)
 
 def add_note(userid, note):
@@ -32,8 +31,11 @@ def user_is_taking_notes(userid):
 def get_user_ids(text):
     return [m[1] for m in AT_USER_MATCHER.findall(text)]
 
-def replace_user_ids(text):
-    pass
+def replace_user_ids(text, users):
+    user_ids = [m[1] for m in AT_USER_MATCHER.findall(text)]
+    for uid in user_ids:
+        text = text.replace("<@%s>" % uid, "@%s" % users.get(uid, {}).get('name', '??'))
+    return text
 
 @respond_to('start')
 def start_notes(message):
