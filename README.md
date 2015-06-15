@@ -26,4 +26,4 @@ This is what a typical notes session might look like:
 
 ### Warnings
 
-The bot just stores incoming meeting notes messages unencrypted into memory. Buy beware.
+The bot just stores incoming meeting notes messages unencrypted into memory. Buyer beware.
