@@ -21,7 +21,7 @@ def stop_taking(userid, message):
     users = client.users
     user_ids = list(chain.from_iterable([get_user_ids(note) for note in notes]))
     user_names = [users[uid].get('name', '???') for uid in user_ids if uid in users]
-    sender_name = users[uid].get('name', '???')
+    sender_name = users[userid].get('name', '???')
     collated = "\n".join(replace_user_ids(note, users) for note in notes)
     meeting_notes = "```%s```" % collated
     message.reply(meeting_notes)
