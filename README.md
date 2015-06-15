@@ -24,3 +24,6 @@ This is what a typical notes session might look like:
 
 ![http://i.imgur.com/J4X65Sv.png](http://i.imgur.com/J4X65Sv.png)
 
+### Warnings
+
+The bot just stores incoming meeting notes messages unencrypted into memory. Buy beware.
