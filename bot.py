@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import os
 import sys
 import logging
 import logging.config
@@ -6,12 +7,11 @@ from slackbot import settings
 from slackbot import dispatcher
 from slackbot.bot import Bot
 
-# monkey patch slackbot
+# monkey patch slackbot -__-
 def new_filter(self, msg):
     text = msg.get('text', '')
     msg['text'] = text
     return msg
-
 dispatcher.MessageDispatcher.filter_text = new_filter
 
 def main():
@@ -23,8 +23,9 @@ def main():
     }
     logging.basicConfig(**kw)
     logging.getLogger('requests.packages.urllib3.connectionpool').setLevel(logging.DEBUG)
-    bot = Bot()
-    bot.run()
+
+    settings.API_TOKEN = os.environ['SLACK_API_TOKEN']
+    Bot().run()
 
 if __name__ == '__main__':
     main()
