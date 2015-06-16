@@ -25,7 +25,8 @@ def stop_taking(userid, message):
     collated = "\n".join(replace_user_ids(note, users) for note in notes)
     meeting_notes = "```%s```" % collated
     message.reply(meeting_notes)
-    message.reply("Sending above to %s" % ", ".join("@%s" % name for name in user_names))
+    if len(user_names) > 0:
+        message.reply("Sending above to %s" % ", ".join("@%s" % name for name in user_names))
     for uid in user_ids:
         send_dm(uid, "@%s took some notes and is sharing it with you:" % sender_name)
         send_dm(uid, meeting_notes)
@@ -52,7 +53,7 @@ def replace_user_ids(text, users):
         text = text.replace("<@%s>" % uid, "@%s" % users.get(uid, {}).get('name', '??'))
     return text
 
-@respond_to('start')
+@respond_to('^start$')
 def start_notes(message):
     userid = get_user(message)
     text = get_text(message)
@@ -63,7 +64,7 @@ def start_notes(message):
         message.reply('(Type `finished` to stop taking notes)')
         start_taking(userid)
 
-@respond_to('finished')
+@respond_to('^finished$')
 def finish_notes(message):
     userid = get_user(message)
     text = get_text(message)
